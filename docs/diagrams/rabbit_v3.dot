@@ -1,0 +1,16 @@
+digraph G {
+  graph [rankdir=LR, bgcolor="white", fontname="DejaVu Sans", nodesep=.5, ranksep=.8, label="Практика №5 — вариант 3", labelloc=t, fontsize=19, pad=.2];
+  node [fontname="DejaVu Sans", fontsize=12, shape=box, style="rounded,filled", fillcolor="#f4f7fa", color="#536d88"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#536d88"];
+  producer [label="Отправитель\nProducer"];
+  exchange [label="Exchange\nfanout", fillcolor="#fff0ce"];
+  q1 [label="Очередь A\nauto_delete=True", fillcolor="#dff2e7"];
+  q2 [label="Очередь B\nauto_delete=True", fillcolor="#dff2e7"];
+  c1 [label="Consumer A\nСон 1–5 с"];
+  c2 [label="Consumer B\nСон 1–5 с"];
+  producer -> exchange [label="basic_publish"];
+  exchange -> q1 [label="broadcast"];
+  exchange -> q2 [label="broadcast"];
+  q1 -> c1 [label="basic_ack"];
+  q2 -> c2 [label="basic_ack"];
+}

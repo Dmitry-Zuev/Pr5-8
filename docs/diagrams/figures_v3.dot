@@ -1,0 +1,23 @@
+digraph G {
+  graph [rankdir=LR, bgcolor="white", fontname="DejaVu Sans", nodesep=.56, ranksep=.94, label="Спортзал — REST + RabbitMQ (практики 5–8)", labelloc=t, fontsize=18, pad=.25];
+  node [fontname="DejaVu Sans", shape=box, style="rounded,filled", color="#4d5a69", fillcolor="#f4f7fa", fontsize=11, margin=".15,.10"];
+  edge [fontname="DejaVu Sans", color="#506478", fontsize=9, arrowsize=.72];
+  subgraph cluster_users { label="Пользователи"; style=rounded; color="#c6d5dd"; user [label="UserService"]; }
+  subgraph cluster_trainings { label="Тренировки и отзывы"; style=rounded; color="#c6d5dd"; training [label="TrainingService"]; review [label="ReviewService"]; }
+  subgraph cluster_subscriptions { label="Абонементы и оплата"; style=rounded; color="#c6d5dd"; subscription [label="SubscriptionService"]; payment [label="PaymentService"]; }
+  subgraph cluster_tours { label="Экскурсии"; style=rounded; color="#c6d5dd"; tour [label="TourService"]; }
+  rabbit [label="RabbitMQ\ngym.domain.events\ntopic, durable", shape=cylinder, fillcolor="#fce6d8", color="#ba815b"];
+  db [label="PostgreSQL: 6 логических БД\nRedis: кеш тренировок", shape=note, fillcolor="#e6efe3", color="#80936d"];
+  training -> user [label="REST: пользователь"];
+  review -> training [label="REST: статус"];
+  subscription -> payment [label="REST: статус оплаты"];
+  payment -> rabbit [label="payment.confirmed", color="#ba815b"];
+  subscription -> rabbit [label="subscription.terminated", color="#ba815b"];
+  training -> rabbit [label="training.finished", color="#ba815b"];
+  tour -> rabbit [label="tour.confirmed", color="#ba815b"];
+  rabbit -> subscription [color="#ba815b"];
+  rabbit -> payment [color="#ba815b"];
+  rabbit -> review [color="#ba815b"];
+  rabbit -> tour [color="#ba815b"];
+  training -> db [style=dotted, arrowhead=none];
+}
